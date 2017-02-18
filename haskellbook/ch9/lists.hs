@@ -52,6 +52,39 @@ main = print $ "Are they equal? " ++ show (myLines sentences '\n' == shouldEqual
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- L I S T   C O M P R E H E N S I O N S
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+squaredRem0 = [x^2 | x <- [1..10], rem x 2 == 0]
+
+mySqr = [x^2 | x <- [1..5]]
+
+-- multiple generators
+powered = [x^y | x <- [1..5], y <- [2,3]]
+
+lessThan200 = [x^y | x <- [1..10], y <- [2, 3], x^y < 200]
+
+listOfTuples1 = [(x, y) | x <- [1, 2, 3], y <- [6, 7]]
+
+listOfTuples2 = [(x, y) | x <- [1, 2, 3], y <- ['a', 'b']]
+
+-- E X E R C I S E S: Comprehend thy Lists
+-- NOTE: didn't do it, too easy
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- List Comprehensions with Strings --
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+threeLetterAcron = [x | x <- "Three Letter Acronym", elem x ['A'..'Z']]
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
