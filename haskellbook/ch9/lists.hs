@@ -73,6 +73,17 @@ listOfTuples2 = [(x, y) | x <- [1, 2, 3], y <- ['a', 'b']]
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 threeLetterAcron = [x | x <- "Three Letter Acronym", elem x ['A'..'Z']]
 
+-- E X E R C I S E S: Square Cube
+-- Given the following:
+mySqr1 = [x^2 | x <- [1..5]]
+myCube = [y^3 | y <- [1..5]]
+
+  --1: write an expression taht will make tuples of the outputs of mySqr and myCube
+  --2: alter the expression so that it only uses the x and y values that are less than 500
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Spines and Non-strict Evaluation --
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
