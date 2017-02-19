@@ -1,5 +1,7 @@
 module Lists where
 
+import Data.Char
+
 {- The List datatype -}
 -- data [] a = [] | a : [a]
 
@@ -150,12 +152,18 @@ zipPlus    = zipWith (+) [1, 2, 3] [10, 11, 12] -- [11, 13, 15]
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- CHAPTER 9: EXERCISES
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+isUp = isUpper 'a' -- False
+toUp = toUpper 'a' -- 'A'
+-- Most of them are boring and simple. Skipped.
 
+-- Ciphers
+getCharFromKeyCode = chr 65 -- 'A'
+getKeyCodeFromChar = ord 'A' -- 65
 
+-- Most of the rest of the exercises asked to rewrite your own
+-- version of some standard functions which in my opinion is a waste of time.
 
-
-
-
-
-
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- DEFINITIONS:
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
