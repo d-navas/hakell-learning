@@ -82,14 +82,74 @@ myCube = [y^3 | y <- [1..5]]
   --2: alter the expression so that it only uses the x and y values that are less than 500
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--- Spines and Non-strict Evaluation --
+-- Spines and Non-strict Evaluation
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+-- Skipped it. Mostly explaining how the compiler evaluates (:) cons
 
 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Exercises: Bottom Madness
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Skipped them. Didn't find them interesting or helpful
 
 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Transforming Lists of Values
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+plusOne  = map (+1) [1, 2, 3, 4]
+oneMinus = map (1-) [1, 2, 3, 4]
+plusOneF = fmap (+1) [1, 2, 3, 4]
+oneMinuF = fmap (2*) [1, 2, 3, 4]
 
+  -- Definition of map in Base (double 'p' to avoid conflict)
+mapp :: (a -> b) -> [a] -> [b]
+mapp _ [] = []
+mapp f (x:xs) = f x : map f xs
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Exercises: More Bottoms
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+isAChar = map (\x -> elem x "a") "danilo"
+-- [False, True, False, False, False, False]
+
+findMin = map minimum [[1..10], [10..20], [20..30]]
+-- [1, 10, 20]
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Filtering Lists of Values
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+findEven = filter even [1..10]
+
+  -- Definition of filter
+filterr :: (a -> Bool) -> [a] -> [a]
+filterr _ [] = []
+filterr pred (x:xs)
+  | pred x    = x : filter pred xs
+  | otherwise = filter pred xs
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Exercises: Filtering
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+filterArticles = filter (\x -> x /= "a" && x /= "an" && x /= "the") $ words "the brown dog was a goof"
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Zipping Lists
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+zipDefault = zip [1, 2] [4, 5, 6] -- [(1,4), (2,5)]
+zipPlus    = zipWith (+) [1, 2, 3] [10, 11, 12] -- [11, 13, 15]
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Exercises: Zipping
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Skipped them. Did not find them useful
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- CHAPTER 9: EXERCISES
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
