@@ -36,7 +36,7 @@ arith :: Num b => (a -> b) -> Integer -> a -> b
 arith f c a = (f a) + (fromInteger c)
 
 -- IMPORTANT:
--- Instances are unique for a given combination oftypeclass and type
+-- Instances are unique for a given combination of typeclass and type
 
 
 

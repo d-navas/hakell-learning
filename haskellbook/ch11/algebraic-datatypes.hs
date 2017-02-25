@@ -1,4 +1,9 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE FlexibleInstances #-}
+
 module AlgebraicDatatypes where
+
+import Data.Int
 
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -119,6 +124,130 @@ data Airline1 =
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- Simple Datatypes with Nullary Data Constructors
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Unary Constructors
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- newtype
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+class TooMany a where
+  tooMany :: a -> Bool
+
+instance TooMany Int where
+  tooMany n = n > 42
+
+instance TooMany (Int, String) where
+  tooMany (n, s) = n > 42
+
+instance TooMany (Int, Int) where
+  tooMany (n, s) = (n + s) > 42
+
+instance (Num a, TooMany a) => TooMany (a, a) where
+  tooMany (n, n') = tooMany (n + n')
+
+-- ~~~
+newtype Goats =
+  Goats Int deriving (Eq, Show, TooMany)
+
+-- ~~~
+newtype Cows =
+  Cows Int deriving (Eq, Show)
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- SUM Types: Exercises
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 1.
+data BigSmall =
+      Big Bool
+    | Small Bool
+    deriving (Eq, Show)
+
+  -- cardinality 4
+
+-- 2.
+data NumberOfBool =
+    Numba Int8
+  | BoolyBool Bool
+  deriving (Eq, Show)
+
+  -- cardinality: 256 + 2
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Product Types
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+data QuantumBool = QuantumTrue
+                 | QuantumFalse
+                 | QuantumBoth deriving (Eq, Show)
+
+data TwoQs = MKTwoQs QuantumBool QuantumBool deriving  (Eq, Show)
+-- Product type. Cardinality (cardinality of QuantumBool * cardinality of QuantumBool)
+-- 3 * 3 = 9
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Record Syntax
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+data Person =
+  Person { name :: String
+         , age :: Int }
+         deriving (Eq, Show)
+
+papu = Person "Papu" 5
+-- > name papu -> "Papu"
+-- > age papu  -> 5
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Normal Form
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--data Fiction    = Fiction deriving Show
+--data NonFiction = NonFiction deriving Show
+
+{- data BookType = FictionBook Fiction
+              | NonFictionBook NonFiction
+              deriving Show -}
+
+type AuthorName = String
+
+--data Author = Author (AuthorName, BookType)
+
+-- Apply distributive property and rewrite Author in normal form
+data Author = Fiction AuthorName
+            | NonFiction AuthorName
+            deriving (Eq, Show)
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Exercises: How Does Your Garden Grow
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 1.
+{-data FlowerType = Gardenia
+                | Daisy
+                | Rose
+                | Lilac
+                deriving Show -}
+
+type Gardener = String
+
+-- data Garden = Garden Gardener FlowerType deriving Show
+
+  -- Normal form of Garden?
+data Garden = Gardenia Gardener
+              | Daisy Gardener
+              | Rose Gardener
+              | Lilac Gardener
+              deriving Show
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 11.3: Constructing and Deconstructing Values
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
+
+
 
 
 
