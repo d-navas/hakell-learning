@@ -241,16 +241,89 @@ data Garden = Gardenia Gardener
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 11.3: Constructing and Deconstructing Values
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+data Id a        = MkId a deriving (Eq, Show)
+data Sum a b     = First a | Second b deriving (Eq, Show)
+data GuessWhat   = Chickenbutt deriving (Eq, Show)
+data Product a b = Product a b deriving (Eq, Show)
+
+data RecordProduct a b = RecordProduct { pfirst  :: a
+                                       , psecond :: b }
+                                       deriving (Eq, Show)
+
+{- 11.3: Sum and Product -}
+newtype NumCow = NumCow Int deriving (Eq, Show)
+newtype NumPig = NumPig Int deriving (Eq, Show)
+
+data Farmhouse = Farmhouse NumCow NumPig deriving (Eq, Show)
 
 
+type Farmhouse' = Product NumCow NumPig
+
+newtype NumSheep  = NumSheep Int deriving (Eq, Show)
+data BigFarmhouse = BigFarmhouse NumCow NumPig NumSheep deriving (Eq, Show)
+
+type BigFarmhouse' = Product NumCow (Product NumPig NumSheep)
+
+{- 11.3: Constructing Values -}
+
+record1 :: RecordProduct Int String
+record1 = RecordProduct 2 "dani"
+
+record2 :: RecordProduct Int String
+record2 = RecordProduct { pfirst=22, psecond="dani" }
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 11.4: Function Type is Exponential
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+data Quantum = Yes
+             | No
+             | Both
+             deriving (Eq, Show)
+
+-- Exponentiation in what order?
+convert :: Quantum -> Bool
+convert = undefined
+ -- Bool = 2 cardinality, Quantum = 3 cardinality
+ -- Implementations = 2 ^ 3 = 8
+
+{- 11.4: Exercises: The Quad -}
+-- Determine how many unique inhabitants
+
+-- 1.
+data Quad = One | Two | Three | Four deriving (Eq, Show)
+eQuad :: Either Quad Quad
+eQuad = undefined
+-- Quad + Quad = 4 + 4 = 8 unique inhabitants
+
+-- 2.
+proQuad :: (Quad, Quad)
+proQuad = undefined
+-- 4 * 4 = 8
+
+-- 3.
+funcQuad :: Quad -> Quad
+funcQuad = undefined
+-- 4 ^ 4 = 256
+
+-- 4.
+prodTBool :: (Bool, Bool, Bool)
+prodTBool = undefined
+-- 2 * 2 * 2 = 8
+
+-- 5.
+gTwo :: Bool -> Bool -> Bool
+gTwo = undefined
+-- (2 ^ 2) ^ 2 = 16
+
+-- 6. Hint: 5 digit number
+fTwo :: Bool -> Quad -> Quad
+fTwo = undefined
+-- (4 ^ 4) ^ 2 = 65536
 
 
-
-
-
-
-
-
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 11.5: Higher-Kinded datatypes
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
