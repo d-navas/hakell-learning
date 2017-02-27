@@ -349,7 +349,7 @@ insert' b (Node left a right)
 -- Write a mapTree function
 mapTree :: (a -> b) -> BinaryTree a -> BinaryTree b
 mapTree _ Leaf = Leaf
-mapTree f (Node left a right) = Node undefined undefined undefined
+mapTree f (Node left a right) = Node (mapTree f left) (f a) (mapTree f right)
 
 testTree' :: BinaryTree Integer
 testTree' = Node (Node Leaf 3 Leaf) 1 (Node Leaf 4 Leaf)
@@ -357,11 +357,12 @@ testTree' = Node (Node Leaf 3 Leaf) 1 (Node Leaf 4 Leaf)
 mapExpected = Node (Node Leaf 4 Leaf) 2 (Node Leaf 5 Leaf)
 
 -- Acceptance test for mapTree
-mapOkay = if mapTree (+1) testTree' == mapExpected
-             then print "yup okay!"
-             else error "test failed!"
+mapOkay =
+  if mapTree (+1) testTree' == mapExpected
+     then print "yup okay!"
+     else error "test failed!"
 
-
+  {- 11.17: Convert Binary Trees to Lists -}
 
 
 
