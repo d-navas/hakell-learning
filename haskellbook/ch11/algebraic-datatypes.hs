@@ -322,18 +322,44 @@ fTwo = undefined
 
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
--- 11.5: Higher-Kinded datatypes
+-- 11.15: Higher-Kinded datatypes
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 11.16: Lists are Polymorphic
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- Infix data constructor
+data Product1 a b = a :&: b deriving (Eq, Show)
 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 11.17: Binary Tree
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+data BinaryTree a = Leaf
+                  | Node (BinaryTree a) a (BinaryTree a)
+                  deriving (Eq, Ord, Show)
 
+  {- 11.17: Inserting into Trees -}
+insert' :: Ord a => a -> BinaryTree a -> BinaryTree a
+insert' b Leaf = Node Leaf b Leaf
+insert' b (Node left a right)
+  | b == a = Node left a right
+  | b < a  = Node (insert' b left) a right
+  | b > a  = Node left a (insert' b right)
 
+-- Write a mapTree function
+mapTree :: (a -> b) -> BinaryTree a -> BinaryTree b
+mapTree _ Leaf = Leaf
+mapTree f (Node left a right) = Node undefined undefined undefined
 
+testTree' :: BinaryTree Integer
+testTree' = Node (Node Leaf 3 Leaf) 1 (Node Leaf 4 Leaf)
 
+mapExpected = Node (Node Leaf 4 Leaf) 2 (Node Leaf 5 Leaf)
 
+-- Acceptance test for mapTree
+mapOkay = if mapTree (+1) testTree' == mapExpected
+             then print "yup okay!"
+             else error "test failed!"
 
 
 
