@@ -363,12 +363,43 @@ mapOkay =
      else error "test failed!"
 
   {- 11.17: Convert Binary Trees to Lists -}
+testTree :: BinaryTree Integer
+testTree = Node (Node Leaf 1 Leaf) 2 (Node Leaf 3 Leaf)
 
+-- Pre Order
+preorder :: BinaryTree a -> [a]
+preorder Leaf = []
+preorder (Node left a right) = a : preorder left ++ preorder right
 
+testPreorder :: IO ()
+testPreorder =
+  if preorder testTree == [2, 1, 3]
+     then putStrLn "Preorder fine!"
+     else putStrLn "Bad news bears."
 
+-- In Order
+inorder :: BinaryTree a -> [a]
+inorder (Node left a right) = preorder left ++ [a] ++ preorder right
 
+testInorder :: IO ()
+testInorder =
+  if inorder testTree == [1, 2, 3]
+     then putStrLn "Inorder fine!"
+     else putStrLn "Bad news bears."
 
+-- Post Order
+postorder :: BinaryTree a -> [a]
+postorder (Node left a right) = preorder left ++ preorder right ++ [a]
 
+testPostorder :: IO ()
+testPostorder =
+  if postorder testTree == [1, 3, 2]
+     then putStrLn "Postorder fine!"
+     else putStrLn "postorder failed check"
 
-
+main :: IO ()
+main = do
+  testPreorder
+  testInorder
+  testPostorder
 
