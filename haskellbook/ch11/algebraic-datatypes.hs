@@ -4,6 +4,7 @@
 module AlgebraicDatatypes where
 
 import Data.Int
+import Data.Char
 
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -402,4 +403,35 @@ main = do
   testPreorder
   testInorder
   testPostorder
+
+  {- 11.17: Write foldr for BinaryTree -}
+foldTree :: (a -> b -> b) -> b -> BinaryTree a -> b
+foldTree f b Leaf = b
+foldTree f b (Node left a right) = f a (foldTree f (foldTree f b left) right)
+
+-- As Patterns
+------------------------
+isSubsequenceOf :: (Eq a) => [a] -> [a] -> Bool
+isSubsequenceOf [] _ = True
+isSubsequenceOf _ [] = False
+isSubsequenceOf xss@(x:xs) (y:ys)
+  | x == y = isSubsequenceOf xs ys
+  | otherwise = isSubsequenceOf xss ys
+
+capitalizeWords :: String -> [(String, String)]
+capitalizeWords s = map (\w@(c:cs) -> (w, (toUpper c) : cs)) $ words s
+
+capWord :: String -> String
+capWord (c:cs) = (toUpper c) : cs
+
+capPara :: String -> String
+capPara s
+  | s == [] = []
+  | '.' `elem` s = capPara s
+  | otherwise = capWord s
+
+
+
+
+
 
