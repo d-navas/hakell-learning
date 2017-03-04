@@ -6,7 +6,6 @@ module AlgebraicDatatypes where
 import Data.Int
 import Data.Char
 import Data.List
-import Data.Maybe
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- Algebraic Datatypes
@@ -428,10 +427,18 @@ capWord (c:cs) = (toUpper c) : cs
 capPara :: String -> String
 capPara s
   | s == [] = []
-  | otherwise = foldr (\a b -> a ++ " " ++ b) "" $ shouldCapWord (words s) True
+  | otherwise = intercalate " " $ shouldCapWord (words s) True
   where
     shouldCapWord :: [String] -> Bool -> [String]
     shouldCapWord [] _ = []
     shouldCapWord (x:xs) True = capWord x : shouldCapWord xs (elem '.' x)
     shouldCapWord (x:xs) False = x : shouldCapWord xs (elem '.' x)
+
+--------------------
+-- Phone Exercise --
+--------------------
+
+
+
+
 
