@@ -5,7 +5,8 @@ module AlgebraicDatatypes where
 
 import Data.Int
 import Data.Char
-
+import Data.List
+import Data.Maybe
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- Algebraic Datatypes
@@ -407,16 +408,16 @@ main = do
   {- 11.17: Write foldr for BinaryTree -}
 foldTree :: (a -> b -> b) -> b -> BinaryTree a -> b
 foldTree f b Leaf = b
-foldTree f b (Node left a right) = f a (foldTree f (foldTree f b left) right)
+foldTree f b (Node left a right) = f a $ foldTree f (foldTree f b left) right
 
 -- As Patterns
 ------------------------
-isSubsequenceOf :: (Eq a) => [a] -> [a] -> Bool
-isSubsequenceOf [] _ = True
-isSubsequenceOf _ [] = False
-isSubsequenceOf xss@(x:xs) (y:ys)
-  | x == y = isSubsequenceOf xs ys
-  | otherwise = isSubsequenceOf xss ys
+isSubsequence :: (Eq a) => [a] -> [a] -> Bool
+isSubsequence [] _ = True
+isSubsequence _ [] = False
+isSubsequence xss@(x:xs) (y:ys)
+  | x == y    = isSubsequence xs ys
+  | otherwise = isSubsequence xss ys
 
 capitalizeWords :: String -> [(String, String)]
 capitalizeWords s = map (\w@(c:cs) -> (w, (toUpper c) : cs)) $ words s
@@ -427,11 +428,10 @@ capWord (c:cs) = (toUpper c) : cs
 capPara :: String -> String
 capPara s
   | s == [] = []
-  | '.' `elem` s = capPara s
-  | otherwise = capWord s
-
-
-
-
-
+  | otherwise = foldr (\a b -> a ++ " " ++ b) "" $ shouldCapWord (words s) True
+  where
+    shouldCapWord :: [String] -> Bool -> [String]
+    shouldCapWord [] _ = []
+    shouldCapWord (x:xs) True = capWord x : shouldCapWord xs (elem '.' x)
+    shouldCapWord (x:xs) False = x : shouldCapWord xs (elem '.' x)
 
