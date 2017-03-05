@@ -487,10 +487,10 @@ printExpr :: Expr -> String
 printExpr (Lit a) = show a
 printExpr (Add e1 e2) = printExpr e1 ++ " + " ++ printExpr e2
 
-
 a1 = Add (Lit 9001) (Lit 1)
 a2 = Add a1 (Lit 2001)
 a3 = Add (Lit 1) a2
-
+-- Prelude> printExpr a3
+-- Prelude> "1 + 9001 + 1 + 2001"
 
 
