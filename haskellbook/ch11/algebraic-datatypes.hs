@@ -437,8 +437,60 @@ capPara s
 --------------------
 -- Phone Exercise --
 --------------------
+data DaPhone = DaPhone
+
+convo :: [String]
+convo =
+  ["Wanna play 20 questions",
+    "Ya",
+    "U 1st haha",
+    "Lol ok. Have u ever tasted alcohol lol",
+    "Lol ya",
+    "Wow ur cool haha. Ur turn",
+    "Ok. Do u think I am pretty Lol",
+    "Lol ya",
+    "Haha thanks just making sure rofl ur turn"]
+
+type Digit = Char
+type Presses = Int
+
+reverseTaps :: DaPhone -> Char -> [(Digit, Presses)]
+reverseTaps = undefined
+
+cellPhonesDead :: DaPhone -> String -> [(Digit, Presses)]
+cellPhonesDead = undefined
+
+fingerTaps :: [(Digit, Presses)] -> Presses
+fingerTaps = undefined
+
+mostPopularLetter :: String -> Char
+mostPopularLetter = undefined
+
+coolestLtr :: [String] -> Char
+coolestLtr = undefined
+
+coolestWord :: [String] -> String
+coolestWord = undefined
+
+--------------------
+-- Hutton's Razor --
+--------------------
+  -- 1. write "eval" function which reduces an expression to a final sum.
+data Expr = Lit Integer | Add Expr Expr
+
+eval :: Expr -> Integer
+eval (Lit a) = a
+eval (Add e1 e2) = eval e1 + eval e2
+
+  -- 2. write a printer for the expressions
+printExpr :: Expr -> String
+printExpr (Lit a) = show a
+printExpr (Add e1 e2) = printExpr e1 ++ " + " ++ printExpr e2
 
 
+a1 = Add (Lit 9001) (Lit 1)
+a2 = Add a1 (Lit 2001)
+a3 = Add (Lit 1) a2
 
 
 
