@@ -72,7 +72,3 @@ niceProduct = foldl' (*) 1
 -- Finally something other than a list
 -- Binary Tree exercises. Skipped them for the sake of time
 
-
-
-
-
