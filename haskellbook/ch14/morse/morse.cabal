@@ -25,7 +25,7 @@ executable morse-exe
   hs-source-dirs:      app
   main-is:             Main.hs
   ghc-options:         -Wall -fwarn-tabs
-  build-depends:       base
+  build-depends:       base >= 4.7 && < 5
                      , containers
                      , QuickCheck
                      , morse
@@ -35,7 +35,7 @@ test-suite morse-test
   type:                exitcode-stdio-1.0
   hs-source-dirs:      test
   main-is:             Spec.hs
-  build-depends:       base
+  build-depends:       base >= 4.7 && < 5
                      , containers
                      , QuickCheck
                      , morse
