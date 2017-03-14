@@ -33,10 +33,8 @@ compare "Julie" True
 ---- Hint: use some arithmetic operation to
 ---- combine values of type 'b'. Pick one.
 arith :: Num b => (a -> b) -> Integer -> a -> b
-arith f c a = (f a) + (fromInteger c)
+arith f c a = f a + fromInteger c
 
 -- IMPORTANT:
 -- Instances are unique for a given combination of typeclass and type
-
-
 

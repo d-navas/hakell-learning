@@ -15,7 +15,7 @@ instance Arbitrary Trivial where
   arbitrary = trivialGen
 
 -- Identity Crisis
-data Identity a = Identity a deriving (Eq, Show)
+newtype Identity a = Identity a deriving (Eq, Show)
 identityGen :: Arbitrary a => Gen (Identity a)
 
 identityGen = do
@@ -82,6 +82,5 @@ falseGen = coarbitrary False' arbitrary
 
 -- main
 main :: IO ()
-main = do
+main =
   sample trivialGen
-

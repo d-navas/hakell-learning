@@ -36,21 +36,21 @@ randomWord (WordList wl) = do
 randomWord' :: IO String
 randomWord' = gameWords >>= randomWord
 
-data Puzzle = Puzzle String [Maybe Char] [Char]
+data Puzzle = Puzzle String [Maybe Char] String
 
 instance Show Puzzle where
   show (Puzzle _ discovered guessed) =
-    (intersperse ' ' $ fmap renderPuzzleChar discovered)
+    intersperse ' ' (fmap renderPuzzleChar discovered)
     ++ " Guessed so far: " ++ guessed
 
 freshPuzzle :: String -> Puzzle
 freshPuzzle s = Puzzle s (map (const Nothing) s) []
 
 charInWord :: Puzzle -> Char -> Bool
-charInWord (Puzzle s _ _) c = elem c s
+charInWord (Puzzle s _ _) c = c `elem` s
 
 alreadyGuessed :: Puzzle -> Char -> Bool
-alreadyGuessed (Puzzle _ _ guessed) c = elem c guessed
+alreadyGuessed (Puzzle _ _ guessed) c = c `elem` guessed
 
 renderPuzzleChar :: Maybe Char -> Char
 renderPuzzleChar (Just c) = c

@@ -11,26 +11,26 @@ import System.IO (hGetLine, hIsEOF, stdin)
 
 convertToMorse :: IO ()
 convertToMorse = forever $ do
-  weAreDone <- hIsEOF stdin
+  weAreDone <- isEOF
   when weAreDone exitSuccess
   -- otherwise, proceed
-  line <- hGetLine stdin
+  line <- getLine
   convertLine line
     where
       convertLine line = do
         let morse = stringToMorse line
         case morse of
-          (Just str) -> putStrLn (intercalate " " str)
+          (Just str) -> putStrLn (unwords str)
           Nothing    -> do
             putStrLn $ "ERROR: " ++ line
             exitFailure
 
 convertFromMorse :: IO ()
 convertFromMorse = forever $ do
-  weAreDone <- hIsEOF stdin
+  weAreDone <- isEOF
   when weAreDone exitSuccess
   -- otherwise, proceed
-  line <- hGetLine stdin
+  line <- getLine
   convertLine line
     where
       convertLine line = do
@@ -60,4 +60,3 @@ main = do
                   \ 'to' morse,\
                   \ such as: morse to"
         exitFailure
-

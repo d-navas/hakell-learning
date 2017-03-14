@@ -69,13 +69,12 @@ runQc :: IO ()
 runQc = quickCheck prop_additionGreater
 
 main :: IO ()
-main = hspec $ do
+main = hspec $
   describe "Addition" $ do
-    it "15 divided by 3 is 5" $ do
+    it "15 divided by 3 is 5" $
       dividedBy 15 3 `shouldBe` (5, 0)
-    it "22 divided by 5 is 4 remainder 2" $ do
+    it "22 divided by 5 is 4 remainder 2" $
       dividedBy 22 5 `shouldBe` (4, 2)
-    it "x + 1 is always greater than x" $ do
+    it "x + 1 is always greater than x" $
       property $ \x -> x + 1 > (x :: Int)
-
 
