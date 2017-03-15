@@ -63,3 +63,24 @@ instance Monoid a => Monoid (Optional a) where
   mappend (Only a) (Only a') = Only (a <> a')
   mappend Nada Nada = Nada
 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 15.11: Madness
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+type Verb = String
+type Adjective = String
+type Adverb = String
+type Noun = String
+type Exclamation = String
+
+madlibbin' :: Exclamation
+  -> Adverb
+  -> Noun
+  -> Adjective
+  -> String
+madlibbin' e adv noun adj =
+  e <> "! he said " <>
+  adv <> " as he jumped into his car " <>
+  noun <> " and drove off with his " <>
+  adj <> " wife."
+
+
