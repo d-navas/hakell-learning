@@ -1,6 +1,8 @@
 module MonoidSemigroup where
 
+import Control.Monad
 import Data.Monoid
+import Test.QuickCheck
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 15.2: What we talk about when we talk about algebras
@@ -49,6 +51,7 @@ data Booly a = False' | True' deriving (Eq, Show)
 
 -- conjunction: just cause
 instance Monoid (Booly a) where
+  mempty = False' -- this did just so it compiles not the actual mempty!!
   mappend False' _    = False'
   mappend _ False'    = False'
   mappend True' True' = True'
@@ -72,15 +75,83 @@ type Adverb = String
 type Noun = String
 type Exclamation = String
 
-madlibbin' :: Exclamation
-  -> Adverb
-  -> Noun
-  -> Adjective
-  -> String
+madlibbin' :: Exclamation -> Adverb -> Noun -> Adjective -> String
 madlibbin' e adv noun adj =
   e <> "! he said " <>
   adv <> " as he jumped into his car " <>
   noun <> " and drove off with his " <>
   adj <> " wife."
 
+madLibbinBetter' :: Exclamation -> Adverb -> Noun -> Adjective -> String
+madLibbinBetter' e adv noun adj =
+   mconcat [ e
+           , "! he said "
+           , adv
+           , " as he jumped into his car "
+           , noun
+           , " and drove off with his "
+           , adj
+           , " wife."]
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 15.12: Better Living Through QuickCheck
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- Proving associativity ~~~~~
+monoidAssoc :: (Eq m, Monoid m) => m -> m -> m -> Bool
+monoidAssoc a b c = (a <> (b <> c)) == ((a <> b) <> c)
+
+-- Quickchecking Left and Right Identity ~~~~~
+monoidLeftIdentity :: (Eq m, Monoid m) => m -> Bool
+monoidLeftIdentity a = (mempty <> a) == a
+
+monoidRightIdentity :: (Eq m, Monoid m) => m -> Bool
+monoidRightIdentity a = (a <> mempty) == a
+
+-- Testing QuickCheck's Patience ~~~~~~~
+data Bull = Fools | Twoo deriving (Eq, Show)
+
+instance Arbitrary Bull where
+  arbitrary = frequency [ (1, return Fools)
+                        , (1, return Twoo) ]
+
+instance Monoid Bull where
+  mempty = Fools
+  mappend _ _ = Fools
+
+type BullMappend = Bull -> Bull -> Bull -> Bool
+
+-- Exercise: Maybe another Monio ~~~~~~~
+-- Write a Monoid instance for Maybe type which doesn't require a Monoid for the contents.
+newtype First' a = First' { getFirst' :: Optional a } deriving (Eq, Show)
+
+instance Monoid (First' a) where
+  mempty = First' Nada
+  mappend (First' (Only a)) (First' (Only a')) = First' $ Only a
+  mappend (First' (Only a)) (First' Nada) = First' $ Only a
+  mappend (First' Nada) (First' (Only a')) = First' $ Only a'
+  mappend (First' Nada) (First' Nada) = First' Nada
+  
+firstMappend :: First' a -> First' a -> First' a
+firstMappend = mappend
+
+type FirstMappend = First' String -> First' String -> First' String -> Bool
+type FstId = First' String -> Bool
+
+instance Arbitrary a => Arbitrary (First' a) where
+  arbitrary = do
+    x <- arbitrary
+    frequency [ (3, return (First' (Only x)))
+              , (1, return (First' Nada))]
+
+-- main --
+main :: IO ()
+main = do
+  quickCheck (monoidAssoc :: BullMappend)
+  quickCheck (monoidLeftIdentity :: Bull -> Bool)
+  quickCheck (monoidRightIdentity :: Bull -> Bool)
+
+  quickCheck (monoidAssoc :: FirstMappend)
+  quickCheck (monoidLeftIdentity :: FstId)
+  quickCheck (monoidRightIdentity :: FstId)
 
