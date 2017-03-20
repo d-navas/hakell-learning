@@ -1,6 +1,6 @@
-module Exercises where
+module SemigroupExercises where
 
-import Test.QuickCheck (Gen, Arbitrary, arbitrary, quickCheck, elements)
+import Test.QuickCheck (Gen, Arbitrary, arbitrary, quickCheck, elements, frequency)
 import Data.Semigroup (Semigroup, (<>))
 
 semigroupAssoc :: (Eq m, Semigroup m) => m -> m -> m -> Bool
@@ -94,7 +94,40 @@ instance (Arbitrary a, Arbitrary b) => Arbitrary (Or a b) where
     b <- arbitrary
     elements [Fst a, Snd b]
 
-type OrAssoc = Or String Ordering -> Or String Ordering -> Or String Ordering -> Bool
+type OrAssoc = Or String Int -> Or String Int -> Or String Int -> Bool
+
+-- ~~~~~ 9 (Need to figure how to test it) ~~~~~~~~~~~~~~
+newtype Combine a b = Combine { unCombine :: a -> b }
+
+instance Semigroup b => Semigroup (Combine a b) where
+  Combine { unCombine = f } <> Combine { unCombine = g } = Combine (f <> g)
+
+-- ~~~~~ 10 (Need to figure how to test it) ~~~~~~~~~~~~~~
+newtype Comp a = Comp { unComp :: a -> a }
+
+instance Semigroup a => Semigroup (Comp a) where
+  Comp { unComp = f } <> Comp { unComp = g } = Comp (f <> g)
+
+-- ~~~~~ 11 ~~~~~~~~~~~~~~
+data Validation a b = Failure a | Success b deriving (Eq, Show)
+
+instance Semigroup a => Semigroup (Validation a b) where
+  (Failure a) <> (Failure a')  =  Failure $ a <> a'
+  (Success b) <> (Success _) = Success b
+  (Failure a) <> (Success _) = Failure a
+  (Success _) <> (Failure a) = Failure a
+
+instance (Arbitrary a, Arbitrary b) => Arbitrary (Validation a b) where
+  arbitrary = do
+    a <- arbitrary
+    b <- arbitrary
+    frequency [(10, return $ Success b)
+            , (1, return $ Failure a)]
+
+type ValidationAssoc =
+  Validation String Int ->
+  Validation String Int ->
+  Validation String Int -> Bool
 
 main :: IO ()
 main = do
@@ -104,3 +137,4 @@ main = do
   quickCheck (semigroupAssoc :: BoolConjAssoc)
   quickCheck (semigroupAssoc :: BoolDisjAssoc)
   quickCheck (semigroupAssoc :: OrAssoc)
+  quickCheck (semigroupAssoc :: ValidationAssoc)
