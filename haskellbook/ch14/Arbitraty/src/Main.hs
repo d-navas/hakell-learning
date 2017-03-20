@@ -16,8 +16,8 @@ instance Arbitrary Trivial where
 
 -- Identity Crisis
 newtype Identity a = Identity a deriving (Eq, Show)
-identityGen :: Arbitrary a => Gen (Identity a)
 
+identityGen :: Arbitrary a => Gen (Identity a)
 identityGen = do
   a <- arbitrary
   return (Identity a)
