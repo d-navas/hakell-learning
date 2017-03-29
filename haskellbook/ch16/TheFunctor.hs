@@ -57,7 +57,31 @@ replaceWithP = const 'p'
 -- > (fmap . fmap) replaceWithP lms --- R: [Just 'p', Nothing, Just 'p']
 -- > (fmap . fmap . fmap) replaceWithP lms --- R: [Just "ppp", Nothing, Just "pppppp"]
 
+-- ~~~~~~~~~
+-- One more round for the P-Funkshun
+-- ~~~~~~~~~
+replaceWithP' :: b -> Char
+replaceWithP' = const 'p'
+
+lms' :: [Maybe String]
+lms' = [Just "Ave", Nothing, Just "woohoo"]
+
+-- making the argument more specific
+replaceWithP'' :: [Maybe [Char]] -> Char
+replaceWithP'' = replaceWithP'
+
+-- Prelude> :t fmap replaceWithP'
+-- fmap replaceWithP' :: Functor f => f a -> f Char
+
+liftedReplace :: Functor f => f a -> f Char
+liftedReplace = fmap replaceWithP'
+
+-- we can assert a more specific type
+liftedReplace' :: [Maybe [Char]] -> [Char]
+liftedReplace' = liftedReplace
+
 
 -- Main
 main :: IO ()
-main = return ()
+main =
+  print (replaceWithP'' lms)
