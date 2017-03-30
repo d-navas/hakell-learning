@@ -80,6 +80,10 @@ liftedReplace = fmap replaceWithP'
 liftedReplace' :: [Maybe [Char]] -> [Char]
 liftedReplace' = liftedReplace
 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 16.8: Transforming the Unapplied Type Argument
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 -- Main
 main :: IO ()
