@@ -151,9 +151,65 @@ instance Functor (Four' a) where
 -- ~~~~~ 8:
 data Trivial = Trivial --can't be implemented since it's kind * and Functor takes * -> *
 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 16.11: Ignoring Possibilities 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+incIfJust :: Num a => Maybe a -> Maybe a
+incIfJust (Just n) = Just $ n + 1
+incIfJust Nothing = Nothing
+
+showIfJust :: Show a => Maybe a -> Maybe String
+showIfJust (Just s) = Just $ show s
+showIfJust Nothing = Nothing
+
+-- using fmap
+incMaybe :: Num a => Maybe a -> Maybe a
+incMaybe m = fmap (+1) m
+
+showMaybe :: Show a => Maybe a -> Maybe String
+showMaybe s = fmap show s
+
+-- point free
+incMaybe' :: Num a => Maybe a -> Maybe a
+incMaybe' = fmap (+1)
+
+showMaybe' :: Show a => Maybe a -> Maybe String
+showMaybe' = fmap show
+
+-- generic functions (work with any datatype that implements Functor)
+liftedInc :: (Functor f, Num b) => f b -> f b
+liftedInc = fmap (+1)
+
+liftedShow :: (Functor f, Show a) => f a -> f String
+liftedShow = fmap show
+
+incEither' :: Num a => Either e a -> Either e a
+incEither' = fmap (+1)
+
+showEither' :: Show a => Either e a -> Either e String
+showEither' = fmap show
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 16.12: A Somewhat Surprising Functor
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+newtype Constant a b = Constant { getConstant :: a } deriving (Eq, Show)
+
+instance Functor (Constant m) where
+  fmap _ (Constant v) = Constant v
+
+-- Prelude> const 2 (getConstant (Constant 3))
+-- 2
+
+-- Prelude> fmap (const 2) (Constant 3)
+-- Constant {getConstant = 3}
+
+-- Prelude> getConstant $ fmap (const 2) (Constant 3)
+-- 3
+
+-- Prelude> getConstant $ fmap (const "blah") (Constant 3)
+-- 3
 
 
--- Main
 main :: IO ()
 main = do
   print (replaceWithP'' lms)
