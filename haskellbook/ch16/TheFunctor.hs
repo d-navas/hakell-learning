@@ -209,6 +209,31 @@ instance Functor (Constant m) where
 -- Prelude> getConstant $ fmap (const "blah") (Constant 3)
 -- 3
 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 16.13: More Structure, More Functors
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+newtype Wrap f a = Wrap (f a) deriving (Eq, Show)
+
+instance Functor f => Functor (Wrap f) where
+  fmap f (Wrap fa) = Wrap (fmap f fa)
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 16.14: IO Functor
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+getInt :: IO Int
+getInt = fmap read getLine -- fmap lifts over IO
+-- > fmap (+1) getInt
+-- > 10
+-- > 11
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 16.15: What if we want to do something different?
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+
+
 
 main :: IO ()
 main = do
