@@ -1,3 +1,5 @@
+{-# LANGUAGE RankNTypes #-}
+
 module TheFunctor where
 
 import Test.QuickCheck
@@ -229,7 +231,36 @@ getInt = fmap read getLine -- fmap lifts over IO
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 16.15: What if we want to do something different?
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- What if we wanted to transform ony the structure and leave the type argument alone?
+-- {-# LANGUAGE RankNTypes #-} <- needed to quantify a below
+type Nat f g = forall a . f a -> g a
 
+-- This will work
+maybeToList :: Nat Maybe []
+maybeToList Nothing  = []
+maybeToList (Just a) = [a]
+
+-- this will not work, not allowed
+degenerateMtl :: Nat Maybe []
+degenerateMtl Nothing = []
+-- degenerateMtl (Just a) = [a + 1] -- doesn't work
+
+-- bad nat
+type Nat' f g a = f a -> g a
+
+-- works
+maybeToList' :: Nat' Maybe [] a
+maybeToList' Nothing = []
+maybeToList' (Just a) = [a]
+
+-- also works if we tell it 'a' is Num a => a
+degenerateMtl' :: Num a => Nat' Maybe [] a
+degenerateMtl' Nothing = []
+degenerateMtl' (Just a) = [a + 1] -- not good practice since it's changing original 'a' value
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 16.16: Functors are Unique to a Datatype
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
