@@ -1,4 +1,5 @@
 {-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE FlexibleInstances #-}
 
 module TheFunctor where
 
@@ -261,9 +262,27 @@ degenerateMtl' (Just a) = [a + 1] -- not good practice since it's changing origi
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 16.16: Functors are Unique to a Datatype
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- In a hypotetical non-Haskell language the following might be possible
+data Tuple a b = Tuple a b deriving (Eq, Show)
 
+-- this is impossible in Haskell
+instance Functor (Tuple ? b) where
+  fmap f (Tuple a b) = Tuple (f a) b
 
+-- Haskell version of above
+data Tuple' a b = Tuple' a b deriving (Eq, Show)
+newtype Flip f a b = Flip (f b a) deriving (Eq, Show) -- f functor
 
+-- this works
+instance Functor (Flip Tuple a) where
+  fmap f (Flip (Tuple a b)) = Flip $ Tuple (f a) b
+
+-- >> fmap (+1) (Flip (Tuple 1 "blah"))
+-- >> Flip (Tuple 2 "blah")
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 16.17: Chapter Exercises
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 main :: IO ()
