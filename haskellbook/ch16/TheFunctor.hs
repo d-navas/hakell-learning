@@ -283,7 +283,7 @@ instance Functor (Flip Tuple a) where
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 16.17: Chapter Exercises
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+-- See ChExercises.hs
 
 main :: IO ()
 main = do
