@@ -113,6 +113,26 @@ k = lookup 2 $ zip xs ys
 summed :: Maybe Integer
 summed = fst $ sum <$> (,) l k
 
+-- Exercise: Identity Instance
+newtype Identity a = Identity a deriving (Eq, Ord, Show)
+
+instance Functor Identity where
+  fmap f (Identity a) = Identity (f a)
+
+instance Applicative Identity where
+  pure = Identity
+  (Identity f) <*> (Identity a) = Identity (f a)
+
+-- Exercise: Constant Instance
+newtype Constant a b = Constant { getConstant :: a } deriving (Eq, Ord, Show)
+
+instance Functor (Constant a) where
+  fmap _ (Constant a) = Constant a
+
+instance Monoid a => Applicative (Constant a) where
+  pure _ = Constant { getConstant = mempty }
+  (Constant a) <*> (Constant a') = Constant (a `mappend` a')
+
 
 
 
