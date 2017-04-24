@@ -152,14 +152,39 @@ mkPerson :: String -> String -> Maybe Person
 mkPerson n a = Person <$> mkName n <*> mkAddress a
 
 -- Exersise: Fixer Upper
--- 1. const <$> Just "Hello" <*> "World"
--- 2. (,,,) Just 90 <*> Just 10 Just "Tierness" [1, 2, 3]
+-- 1. const <$> Just "Hello" <*> pure "World"
+-- 2. (,,,) <$> Just 90 <*> Just 10 <*> Just "Tierness" <*> pure [1, 2, 3]
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 17.6: Applicative Laws
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+-- 1. Identity:
+  -- pure id <*> v = v
 
+  -- Example (all equal):
+  -- id [1..5]
+  -- fmap id [1..5]
+  -- pure id <*> [1..5]
+
+-- 2. Composition:
+  -- pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
+
+-- 3. Homomorphism:
+  -- pure f <*> pure x = pure (f x)
+
+-- e.g.:
+  -- pure (+1) <*> pure 1 = pure ((+1) 1)
+
+-- 4. Interchange:
+  -- u <*> pure y = pure ($ y) <*> u
+
+  -- (u: function embedded in some strcuture)
+  -- e.g.
+  -- Just (+2) <*> pure 2
+
+  -- According to the law, following are equal:
+  -- Just (+2) <*> pure 2 == pure ($ 2) <*> Just (+2)
 
 
 
