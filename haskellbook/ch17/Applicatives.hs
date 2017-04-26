@@ -1,67 +1,70 @@
+{-# OPTIONS_GHC -fwarn-incomplete-patterns #-}
+
 module Applicatives where
 
 import Data.List (elemIndex)
 import Data.Monoid
+import Control.Applicative
 import Test.QuickCheck
-import Test.QuickCheck.Checkers -- provided by external library
-import Test.QuickCheck.Classes -- provided by external library
+-- import Test.QuickCheck.Checkers -- provided by external library
+-- import Test.QuickCheck.Classes -- provided by external library
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 17.2: Defining Applicative
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~
 -- So, every type that can have an Applicative instance must also have a Functor instance
-class Functor f => Applicative f where
-  pure  :: a -> f a
-  (<*>) :: f (a -> b) -> f a -> f b
+-- class Functor f => Applicative f where
+--   pure  :: a -> f a
+--   (<*>) :: f (a -> b) -> f a -> f b
 
 -- Core Control.Applicative functions
-liftA :: Applicative f => (a -> b)
-          -> f a
-          -> f b
+-- liftA :: Applicative f => (a -> b)
+--           -> f a
+--           -> f b
 
-liftA2 :: Applicative f => (a -> b -> c)
-          -> f a
-          -> f b
-          -> f c
+-- liftA2 :: Applicative f => (a -> b -> c)
+--           -> f a
+--           -> f b
+--           -> f c
 
-liftA3 :: Applicative f => (a -> b -> c -> d)
-          -> f a
-          -> f b
-          -> f c
-          -> f d
+-- liftA3 :: Applicative f => (a -> b -> c -> d)
+--           -> f a
+--           -> f b
+--           -> f c
+--           -> f d
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 17.3: Functor vs Applicative
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-fmap (+1) [1..3] is equivalent to pure (+1) <*> [1..3]
+-- fmap (+1) [1..3] is equivalent to pure (+1) <*> [1..3]
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 17.4: Applicative Functors are monoidal functors
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-mappend :: Monoid a => a -> a -> a
+-- mappend :: Monoid a => a -> a -> a
 
 {- Show me the monoids -}
 
 {- Tuple Monoid nad Applicative side by side -}
-instance (Monoid a, Monoid b) => Monoid (a, b) where
-  mempty = (mempty, mempty)
-  (a, b) `mappend` (a', b') = (a `mappend` a', b `mappend` b')
+-- instance (Monoid a, Monoid b) => Monoid (a, b) where
+--   mempty = (mempty, mempty)
+--   (a, b) `mappend` (a', b') = (a `mappend` a', b `mappend` b')
 
-instance Monoid a => Applicative ((,) a) where
-  pure x = (mempty, x)
-  (u, f) <*> (v, x) = (u `mappend` v, f x)
+-- instance Monoid a => Applicative ((,) a) where
+--   pure x = (mempty, x)
+--   (u, f) <*> (v, x) = (u `mappend` v, f x)
 
 {- Maybe Monoid and Applicative -}
-instance Monoid a => Monoid a (Maybe a) where
-  mempty = Nothing
-  mappend m Nothing = m
-  mappend Nothing m = m
-  mappend (Just a) (Just a') = Just (a `mappend` a')
+-- instance Monoid a => Monoid a (Maybe a) where
+--   mempty = Nothing
+--   mappend m Nothing = m
+--   mappend Nothing m = m
+--   mappend (Just a) (Just a') = Just (a `mappend` a')
 
-instance Applicative Maybe where -- implicit Monoid (see it?)
-  pure = Just
-  Nothing <*> _ = Nothing
-  Just f <*> Just a = Just (f a)
+-- instance Applicative Maybe where -- implicit Monoid (see it?)
+--   pure = Just
+--   Nothing <*> _ = Nothing
+--   Just f <*> Just a = Just (f a)
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 17.5: Applicative in Use
@@ -92,14 +95,14 @@ tupled = (,) <$> y <*> z
 x :: Maybe Int
 x = elemIndex 3 [1..5]
 
-h :: Maybe Int
-h = elemIndex 4 [1..5]
+-- h :: Maybe Int
+-- h = elemIndex 4 [1..5]
 
 max' :: Int -> Int -> Int
 max' = max
 
-maxed :: Maybe Int
-maxed = max' <$> x <*>  h
+-- maxed :: Maybe Int
+-- maxed = max' <$> x <*>  h
 
 -- 4.
 xs :: [Integer]
@@ -156,39 +159,39 @@ mkPerson :: String -> String -> Maybe Person
 mkPerson n a = Person <$> mkName n <*> mkAddress a
 
 -- Exersise: Fixer Upper
-const <$> Just "Hello" <*> pure "World"
-(,,,) <$> Just 90 <*> Just 10 <*> Just "Tierness" <*> pure [1, 2, 3]
+-- const <$> Just "Hello" <*> pure "World"
+-- (,,,) <$> Just 90 <*> Just 10 <*> Just "Tierness" <*> pure [1, 2, 3]
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 17.6: Applicative Laws
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -- 1. Identity:
-  pure id <*> v = v
+  -- pure id <*> v = v
 
   -- Example (all equal):
-  id [1..5]
-  fmap id [1..5]
-  pure id <*> [1..5]
+  -- id [1..5]
+  -- fmap id [1..5]
+  -- pure id <*> [1..5]
 
 -- 2. Composition:
-  pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
+  -- pure (.) <*> u <*> v <*> w = u <*> (v <*> w)
 
 -- 3. Homomorphism:
-  pure f <*> pure x = pure (f x)
+  -- pure f <*> pure x = pure (f x)
 
 -- e.g.:
-  pure (+1) <*> pure 1 = pure ((+1) 1)
+  -- pure (+1) <*> pure 1 = pure ((+1) 1)
 
 -- 4. Interchange:
-  u <*> pure y = pure ($ y) <*> u
+  -- u <*> pure y = pure ($ y) <*> u
 
   -- (u: function embedded in some strcuture)
   -- e.g.
-  Just (+2) <*> pure 2
+  -- Just (+2) <*> pure 2
 
   -- According to the law, following are equal:
-  Just (+2) <*> pure 2 == pure ($ 2) <*> Just (+2)
+  -- Just (+2) <*> pure 2 == pure ($ 2) <*> Just (+2)
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 17.7: QuickChecking the Applicative Laws
@@ -203,26 +206,22 @@ instance Monoid Bull where
   mempty = Fools
   mappend _ _ = Fools
 
-instance EqProp Bull where (=-=) = eq
-
-main :: IO ()
-main = quickBatch (monoid Twoo)
+-- instance EqProp Bull where (=-=) = eq
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 17.8: ZipList Monoid
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 instance Monoid a => Monoid (ZipList a) where
   mempty = pure mempty
   mappend = liftA2 mappend
 
-instance Arbitrary a => Arbitrary (ZipList a) where
-  arbitrary = ZipList <$> arbitrary
+-- instance Arbitrary a => Arbitrary (ZipList a) where
+--   arbitrary = ZipList <$> arbitrary
 
-instance Arbitrary a => Arbitrary (Sum a) where
-  arbitrary = Sum <$> arbitrary
+-- instance Arbitrary a => Arbitrary (Sum a) where
+--   arbitrary = Sum <$> arbitrary
 
-instance Eq a => EqProp (ZipList a) where (=-=) = eq
+-- instance Eq a => EqProp (ZipList a) where (=-=) = eq
 
 -- List Applicative Exercise:
 data List a = Nil | Cons a (List a) deriving (Eq, Show)
@@ -248,7 +247,37 @@ instance Functor List where
 instance Applicative List where
   pure a = Cons a Nil
   (Cons f Nil) <*> (Cons a Nil) = Cons (f a) Nil
-  Cons f fs <*> xs = append (f <$> xs) (fs <*> xs)
+  Cons f fs <*> Cons a as = Cons (f a) (fs <*> as)
   _ <*> Nil = Nil
   Nil <*> _ = Nil
+
+-- ZipList Applicative Exercise
+take' :: Int -> List a -> List a
+take' n xs = go n xs Nil
+  where
+    go n' (Cons h t) acc =
+          if n' == 0
+             then acc
+             else go (n' - 1) t (Cons h acc)
+    go _ Nil acc = acc
+
+newtype ZipList' a = ZipList' (List a) deriving (Eq, Show)
+
+instance Functor ZipList' where
+  fmap f (ZipList' xs) = ZipList' (fmap f xs)
+
+instance Applicative ZipList' where
+  pure a = ZipList' (Cons a Nil)
+  _ <*> ZipList' Nil = ZipList' Nil
+  ZipList' Nil <*> _ = ZipList' Nil
+  (ZipList' (Cons f fs)) <*> (ZipList' (Cons a as)) = ZipList' (Cons (f a) (fs <*> as))
+
+-- Either and Validation Applicative
+
+
+
+
+
+main :: IO ()
+main = putStrLn "Applicatives"
 
