@@ -5,7 +5,7 @@ module Applicatives where
 import Data.List (elemIndex)
 import Data.Monoid
 import Control.Applicative
-import Test.QuickCheck
+-- import Test.QuickCheck
 -- import Test.QuickCheck.Checkers -- provided by external library
 -- import Test.QuickCheck.Classes -- provided by external library
 
@@ -198,9 +198,9 @@ mkPerson n a = Person <$> mkName n <*> mkAddress a
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 data Bull = Fools | Twoo deriving (Eq, Show)
 
-instance Arbitrary Bull where
-  arbitrary = frequency [ (1, return Fools)
-                        , (1, return Twoo)]
+-- instance Arbitrary Bull where
+--   arbitrary = frequency [ (1, return Fools)
+--                         , (1, return Twoo)]
 
 instance Monoid Bull where
   mempty = Fools
@@ -273,8 +273,36 @@ instance Applicative ZipList' where
   (ZipList' (Cons f fs)) <*> (ZipList' (Cons a as)) = ZipList' (Cons (f a) (fs <*> as))
 
 -- Either and Validation Applicative
+data Validation err a = Failure err | Success a deriving (Eq, Show)
 
+validToEither :: Validation e a -> Either e a
+validToEither (Failure err) = Left err
+validToEither (Success a) = Right a
 
+eitherToValid :: Either e a -> Validation e a
+eitherToValid (Left err) = Failure err
+eitherToValid (Right a) = Success a
+
+data Errors = DividedByZero | StackOverflow | MoonglesChewedWires deriving (Eq, Show)
+
+-- success = Success (+1) <*> Success 1
+failure = Success (+1) <*> Failure [StackOverflow]
+failure' = Failure [StackOverflow] <*> Success (+1)
+failures = Failure [MoonglesChewedWires] <*> Failure [StackOverflow]
+
+-- Exercise: Variations on Either
+
+-- Same as either
+instance Functor (Validation e) where
+  fmap _ (Failure e) = Failure e
+  fmap f (Success a) = Success (f a)
+
+instance Monoid e => Applicative (Validation e) where
+  pure = Success
+  Success f <*> Success a = Success (f a)
+  Failure as <*> Failure as' = Failure (as <> as')
+  _ <*> Failure as = Failure as
+  Failure as <*> _ = Failure as
 
 
 
