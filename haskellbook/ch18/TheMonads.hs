@@ -149,21 +149,23 @@ mkSoftware years coders = do
 data Sum a b = First a | Second b deriving (Eq, Show)
  
 instance Functor (Sum a) where
-  fmap f (First a) = First a
+  fmap _ (First a) = First a
   fmap f (Second b) = Second (f b)
  
-instance Monoid a => Applicative (Sum a) where
+instance Applicative (Sum a) where
   pure = Second
-  First a <*> First a' = First (a `mappend` a')
   _ <*> First a = First a
   First a <*> _ = First a
   Second f <*> Second a = Second (f a)
  
-instance Monoid a => Monad (Sum a) where
+instance Monad (Sum a) where
   return = pure
   First a >>= _ = First a
   Second a >>= f = f a
 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 18.5: Monad Laws
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 main :: IO ()
 main = putStrLn "Ch-18: The Monads"
