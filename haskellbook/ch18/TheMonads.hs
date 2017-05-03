@@ -2,7 +2,7 @@
 
 module TheMonads where
 
-import Control.Monad (join)
+import Control.Monad
 
 -- class Applicative m => Monad m where
 --   (>>=) :: m a -> (a -> m b) -> m b
@@ -160,13 +160,72 @@ instance Applicative (Sum a) where
  
 instance Monad (Sum a) where
   return = pure
-  First a >>= _ = First a
+  First  a >>= _ = First a
   Second a >>= f = f a
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 18.5: Monad Laws
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+-- IDENTITY (return should be neutral and no perform any computations)
+  -- Right identity
+  -- m >>= return = m
+
+  -- Left identity
+  -- return x >>= f = f x
+ 
+-- ASSOCIATIVITY
+  -- (m >>= f) >>= g = m >>= (\x -> f x >>= g)
+ 
+-- BAD Monads And Their Denizens
+data CountMe b = CountMe Integer b deriving (Eq, Show)
+ 
+instance Functor CountMe where
+  fmap f (CountMe i b) = CountMe i (f b)
+ 
+instance Applicative CountMe where
+  pure = CountMe 0
+  CountMe n f <*> CountMe n' b = CountMe (n + n') (f b)
+ 
+  -- Bad Monad
+-- instance Monad CountMe where
+--   return = CountMe 0
+--   CountMe n a >>= f = let CountMe _ b = f a
+--                       in CountMe (n + 1) b
+                     
+  -- GOOOOOD Monad
+instance Monad CountMe where
+  return = pure
+  CountMe n b >>= f = let CountMe n' b' = f b
+                      in CountMe (n + n') b'
+ 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 18.6: Application and Composition
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+mcomp :: Monad m => (b -> m c) -> (a -> m b) -> a -> m c
+mcomp f g a = g a >>= f
+ 
+-- we can use Kleisli composition operator (>=>)
+-- (>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c
+ 
+-- Very similar to this:
+-- flip (.) ::         (a -> b)   -> (b -> c)   -> a -> c
+ 
+sayHi :: String -> IO String
+sayHi greeting = do
+  putStrLn greeting
+  getLine
+ 
+readM :: Read a => String -> IO a
+readM = return . read
+ 
+getAge :: String -> IO Int
+getAge = sayHi >=> readM
+ 
+askForAge :: IO Int
+askForAge = getAge "how old are you?"
+
+-- main
 main :: IO ()
 main = putStrLn "Ch-18: The Monads"
 
