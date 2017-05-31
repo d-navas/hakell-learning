@@ -152,9 +152,18 @@ instance Traversable ((,) a) where
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 21.10: Traversable Laws
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 1. Naturality
+t . traverse f = traverse (t . f)
 
+-- 2. Identity
+traverse Identity = Identity
 
+-- 3. Composition
+traverse (Compose . fmap g . f) = Compose . fmap (traverse g) . traverse 
 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 21.10: sequenceA Laws
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 
@@ -162,3 +171,4 @@ instance Traversable ((,) a) where
 -- main
 main :: IO ()
 main = putStrLn "...works..."
+
