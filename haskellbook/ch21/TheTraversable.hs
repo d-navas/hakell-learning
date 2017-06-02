@@ -152,9 +152,10 @@ instance Traversable ((,) a) where
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 21.10: Traversable Laws
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+traverse' :: Applicative f => (a -> f b) -> t a -> f (t b)
+
 -- 1. Naturality
 t . traverse f = traverse (t . f)
-Compose :: f (g a) -> Compose f g a
 
 -- Example:
 let
@@ -171,25 +172,28 @@ in
 -- 2. Identity
 traverse Identity = Identity
 
--- 3. Composition
+-- 3. Composition: Compose :: f (g a) -> Compose f g a
 traverse (Compose . fmap g . f) = Compose . fmap (traverse g) . traverse f
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 21.10: sequenceA Laws
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sequenceA' :: Applicative f => t (f a) -> f (t a)
 -- 1. Naturality
 t . sequenceA = sequenceA . fmap t
 
 -- 2. Identity
 sequenceA . fmap Identity = Identity
 
--- 3. Composition
-sequenceA . fmap Compose = Compose . fmap sequenceA
--- 3. Composition
+-- 3. Composition: Compose :: f (g a) -> Compose f g a
 sequenceA . fmap Compose = Compose . fmap sequenceA . sequenceA
 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 21.11: Quality Control
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+type TI = []
 
--- main
-main :: IO ()
-main = putStrLn "...works..."
+main = do
+  let trigger = undefined :: TI (Int, Int, [Int])
+  quickBatch (traversable trigger)
 
