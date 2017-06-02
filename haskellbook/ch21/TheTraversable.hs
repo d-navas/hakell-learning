@@ -154,18 +154,39 @@ instance Traversable ((,) a) where
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 1. Naturality
 t . traverse f = traverse (t . f)
+Compose :: f (g a) -> Compose f g a
+
+-- Example:
+let
+  t :: Either () a -> Maybe a;
+  t (Left ()) = Nothing;
+  t (Right x) = Just x;
+ 
+  f = \x -> if even x then Right x else Left ()
+in
+  t . traverse f $ [2,4,6 :: Int] -- Just [2, 4, 6]
+  -- or
+  traverse (t . f) $ [2,4,6 :: Int] -- Just [2, 4, 6]
 
 -- 2. Identity
 traverse Identity = Identity
 
 -- 3. Composition
-traverse (Compose . fmap g . f) = Compose . fmap (traverse g) . traverse 
+traverse (Compose . fmap g . f) = Compose . fmap (traverse g) . traverse f
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- 21.10: sequenceA Laws
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 1. Naturality
+t . sequenceA = sequenceA . fmap t
 
+-- 2. Identity
+sequenceA . fmap Identity = Identity
 
+-- 3. Composition
+sequenceA . fmap Compose = Compose . fmap sequenceA
+-- 3. Composition
+sequenceA . fmap Compose = Compose . fmap sequenceA . sequenceA
 
 
 -- main
