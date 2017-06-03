@@ -10,21 +10,20 @@ module Ch21Exercises where
 -- Write a Traversable instance for the datatype provided,
 -- filling in any required superclasses.
 
--- 1. Identity: Write a Traversable instance for Identity
+-- 1. Write a Traversable instance for Identity
 newtype Identity a = Identity a deriving (Eq, Ord, Show)
 
 instance Functor Identity where
-  fmap f (Identity x) = Identity (f x)
+  fmap f (Identity a) = Identity (f a)
 
 instance Foldable Identity where
-  foldMap f (Identity x) = f x
+  foldMap f (Identity a) = f a
 
 instance Traversable Identity where
   traverse f (Identity a) = Identity <$> f a
 
--- 2. Identity: Write a Traversable instance for Constant
+-- 2. Write a Traversable instance for Constant
 newtype Constant a b = Constant { getConstant :: a }
-
 
 
 
